@@ -119,6 +119,9 @@ def predownload_hook(conduit):
 
     # Setup a queue of packages to download
     for pkg in pkglist :
+        # No need to download if pkg already on disk
+        if (True == pkg.verifyLocalPkg()) :
+            continue
         rid = pkg.repoid
         if rid not in url_pos :
             url_pos[rid] = 0
@@ -130,9 +133,6 @@ def predownload_hook(conduit):
 
         local = pkg.localPkg()
         remote = url + '/' + pkg.relativepath
-        # Check if local package has already downloaded
-        if (True == pkg.verifyLocalPkg()) :
-            continue
         mt.add_package(remote, local)
 
     start = time.time() # The clock is started.
